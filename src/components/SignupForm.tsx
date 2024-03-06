@@ -1,20 +1,7 @@
 import React from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
-
-// 스키마 정의
-const signupSchema = z.object({
-  name: z.string().min(2, "이름은 2글자 이상이어야 합니다."),
-  email: z.string().email("올바른 이메일을 입력해주세요."),
-  contact: z.string().length(11, "연락처는 11자리여야 합니다."),
-  role: z.string().nonempty("역할을 선택해주세요."),
-  password: z.string().min(6, "비밀번호는 6자리 이상이어야 합니다."),
-  passwordConfirm: z.string().min(6, "비밀번호는 6자리 이상이어야 합니다."),
-});
-
-// 폼 데이터 타입
-type SignUpFormData = z.infer<typeof signupSchema>;
+import { signupSchema, SignUpFormData } from "@/validators/auth";
 
 export default function SignupForm() {
   const {
@@ -26,7 +13,7 @@ export default function SignupForm() {
   });
 
   const onSubmit: SubmitHandler<SignUpFormData> = (data) => {
-    // 회원가입 로직 처리
+    // 회원가입 로직
     console.log(data);
   };
 
