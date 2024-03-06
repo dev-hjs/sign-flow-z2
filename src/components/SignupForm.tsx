@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signupSchema, SignUpFormData } from "@/validators/auth";
+import Modal from "./Modal";
 
 export default function SignupForm() {
   const {
@@ -12,9 +13,14 @@ export default function SignupForm() {
     resolver: zodResolver(signupSchema),
   });
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [formData, setFormData] = useState<SignUpFormData | null>(null);
+
   const onSubmit: SubmitHandler<SignUpFormData> = (data) => {
     // 회원가입 로직
-    console.log(data);
+    // console.log(data);
+    setFormData(data); // 폼 데이터 저장
+    setIsModalOpen(true); // 모달 열기
   };
 
   return (
@@ -36,6 +42,7 @@ export default function SignupForm() {
           <input
             {...register("name")}
             className="mt-1 px-3 py-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+            placeholder="홍길동"
           />
           {errors.name && (
             <span className="text-red-500 text-sm">{errors.name.message}</span>
@@ -46,6 +53,7 @@ export default function SignupForm() {
           <input
             {...register("email")}
             className="mt-1 px-3 py-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+            placeholder="test@gmail.com"
           />
           {errors.email && (
             <span className="text-red-500 text-sm">{errors.email.message}</span>
@@ -56,6 +64,7 @@ export default function SignupForm() {
           <input
             {...register("contact")}
             className="mt-1 px-3 py-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+            placeholder="01012345678"
           />
           {errors.contact && (
             <span className="text-red-500 text-sm">
@@ -86,6 +95,7 @@ export default function SignupForm() {
             {...register("password")}
             type="password"
             className="mt-1 px-3 py-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+            placeholder="비밀번호는 최소 6자리 이상, 영문, 숫자, 특수문자를 포함"
           />
           {errors.password && (
             <span className="text-red-500 text-sm">
@@ -113,6 +123,11 @@ export default function SignupForm() {
           회원가입
         </button>
       </form>
+      <Modal
+        isOpen={isModalOpen}
+        data={formData}
+        onClose={() => setIsModalOpen(false)}
+      />
     </div>
   );
 }
