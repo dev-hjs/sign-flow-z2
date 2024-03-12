@@ -33,6 +33,7 @@ import {
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
+import Image from "next/image";
 
 export default function PaymentForm() {
   return (
@@ -68,10 +69,11 @@ export default function PaymentForm() {
                 주문 상품 정보
               </CardTitle>
               <div className="flex items-center mb-4">
-                <img
+                <Image
                   src="https://picsum.photos/100/100"
+                  width={100}
+                  height={100}
                   alt="상품 이미지"
-                  className="mr-4"
                 />
                 <div className="flex flex-col">
                   <CardDescription className="font-medium">
@@ -124,7 +126,7 @@ export default function PaymentForm() {
                 </Button>
               </div>
               <p className="mb-4">배송 메모</p>
-              <Select className="mb-4">
+              <Select>
                 <SelectTrigger className="w-full bg-gray-100 border border-gray-300">
                   <SelectValue
                     placeholder="배송메모를 선택해주세요"
