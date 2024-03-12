@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { signupSchema, SignUpFormData } from "@/validators/auth"; // Ensure this path matches your project structure
-import Modal from "./Modal"; // Adjust the import path as necessary
+import { signupSchema, SignUpFormData } from "@/validators/auth";
+import Modal from "./Modal";
 
 export default function SignupForm() {
   const {
