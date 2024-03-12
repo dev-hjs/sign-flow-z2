@@ -75,7 +75,7 @@ export default function PaymentForm() {
                   height={100}
                   alt="상품 이미지"
                 />
-                <div className="flex flex-col">
+                <div className="pl-3 flex flex-col">
                   <CardDescription className="font-medium">
                     거품처럼 부드러운 클렌징폼
                   </CardDescription>
