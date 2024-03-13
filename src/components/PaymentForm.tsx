@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -155,29 +155,46 @@ export default function PaymentForm() {
                 >
                   쿠폰
                 </Label>
-                <Input
-                  type="email"
-                  placeholder=""
-                  className="border p-2 w-full"
-                />
-                <Button
-                  type="submit"
-                  style={{ width: 150 }}
-                  className="bg-blue-500 text-white p-2 hover:bg-blue-600 transition-colors duration-200"
-                >
-                  쿠폰 적용
-                </Button>
+
+                <Select>
+                  <SelectTrigger
+                    className="bg-gray-100 border border-gray-300"
+                    style={{ width: 900 }}
+                  >
+                    <SelectValue
+                      placeholder="쿠폰을 선택해주세요"
+                      className="pl-2"
+                    />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="5000" className="hover:bg-gray-100">
+                      5천원 할인쿠폰
+                    </SelectItem>
+                    <SelectItem value="30percent" className="hover:bg-gray-100">
+                      30% 할인쿠폰
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+
+                <div className="flex w-full max-w-sm items-center space-x-2">
+                  <Button className="w-full bg-blue-500 text-white p-2 hover:bg-blue-600 transition-colors duration-200">
+                    쿠폰 적용
+                  </Button>
+                </div>
               </div>
+
               <div className="flex w-full max-w-sm items-center space-x-2 mb-4">
                 <Label
-                  htmlFor="email"
+                  htmlFor="points"
                   style={{ width: 100 }}
                   className="block text-sm font-medium text-gray-700"
                 >
                   포인트
                 </Label>
                 <Input
-                  type="email"
+                  id="points"
+                  type="number"
+                  value=""
                   placeholder=""
                   className="border p-2 w-full"
                 />
@@ -191,7 +208,7 @@ export default function PaymentForm() {
               </div>
               <div className="flex justify-between">
                 <span>보유 포인트</span>
-                <span>2,300</span>
+                <span>점</span>
               </div>
             </CardContent>
             {/* 우측 영역 */}
@@ -199,19 +216,21 @@ export default function PaymentForm() {
               <CardTitle className="text-lg font-semibold mb-4">
                 최종 결제금액
               </CardTitle>
-              <div className="flex flex-col mb-4">
-                <div className="flex justify-between px-4 py-2">
-                  <span>상품 가격</span>
-                  <span>18,000원</span>
-                </div>
-                <div className="flex justify-between px-4 py-2">
-                  <span>쿠폰 할인</span>
-                  <span>0원</span>
-                </div>
-                <div className="flex justify-between px-4 py-2">
-                  <span>포인트 사용</span>
-                  <span>2,300원</span>
-                </div>
+              <div className="flex justify-between px-4 py-2">
+                <span>총 상품 가격</span>
+                <span>원</span>
+              </div>
+              <div className="flex justify-between px-4 py-2">
+                <span>쿠폰 할인</span>
+                <span>원</span>
+              </div>
+              <div className="flex justify-between px-4 py-2">
+                <span>포인트 할인</span>
+                <span>원</span>
+              </div>
+              <div className="flex justify-between px-4 py-2 font-bold">
+                <span>최종 결제금액</span>
+                <span>원</span>
               </div>
               <hr className="my-4" />
               <CardTitle className="text-lg font-semibold mb-4">
