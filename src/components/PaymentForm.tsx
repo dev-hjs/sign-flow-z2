@@ -36,6 +36,7 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import Image from "next/image";
+import Checkout from "@/pages/Checkout";
 
 // SelectListItem 타입 정의
 interface SelectListItem {
@@ -101,6 +102,7 @@ export default function PaymentForm() {
   const [finalPrice, setFinalPrice] = useState(18000); // 최종 결제금액
   const [discount, setDiscount] = useState(0); // 할인액
   const [totalPoints, setTotalPoints] = useState(2300); // 총 보유 포인트
+  const [showPaymentWidget, setShowPaymentWidget] = useState(false); // 토스페이 위젯
 
   // 쿠폰 목록
   const couponItems: SelectListItem[] = [
@@ -145,7 +147,7 @@ export default function PaymentForm() {
   const handleApplyPoints = () => {
     const pointsToUse = Math.max(0, Number(points));
     if (pointsToUse > totalPoints) {
-      alert("Cannot use more points than available.");
+      alert("보유 포인트보다 더 많은 포인트를 사용할 수 없습니다.");
       return;
     }
 
@@ -166,6 +168,16 @@ export default function PaymentForm() {
 
     setFinalPrice(finalPriceAfterPoints);
   }, [discount, pointsUsed]);
+
+  // 결제하기 버튼
+  const handlePaymentClick = () => {
+    setShowPaymentWidget(true);
+  };
+
+  // showPaymentWidget이 true일때 Checkout 컴포넌트 조건부 렌더링
+  if (showPaymentWidget) {
+    return <Checkout />;
+  }
 
   return (
     <div className="flex justify-center items-center bg-gray-50 min-h-screen">
@@ -257,7 +269,6 @@ export default function PaymentForm() {
                 </Button>
               </div>
               <p className="mb-4">배송 메모</p>
-
               <hr className="my-4" />
               <p className="mb-4">쿠폰/포인트</p>
               <div className="flex w-full max-w-sm items-center space-x-2 mb-4">
@@ -268,7 +279,6 @@ export default function PaymentForm() {
                 >
                   쿠폰
                 </Label>
-
                 <SelectField
                   items={couponItems}
                   field={{
@@ -279,7 +289,6 @@ export default function PaymentForm() {
                   }}
                   placeholder="쿠폰을 선택해주세요."
                 />
-
                 <div className="flex w-full max-w-sm items-center space-x-2">
                   <Button
                     onClick={handleApplyCoupon}
@@ -289,7 +298,6 @@ export default function PaymentForm() {
                   </Button>
                 </div>
               </div>
-
               <div className="flex w-full max-w-sm items-center space-x-2 mb-4">
                 <Label
                   htmlFor="points"
@@ -381,6 +389,7 @@ export default function PaymentForm() {
               <Button
                 type="submit"
                 className="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors duration-200"
+                onClick={handlePaymentClick}
               >
                 결제하기
               </Button>
