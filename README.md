@@ -1,6 +1,6 @@
 # sign-flow-z2
 
-sign-flow-z2는 Next.js 기반으로 만들어진 프로젝트입니다.
+sign-flow-z2는 Next.js 기반으로 만들어진 프로젝트입니다.<br>
 Tailwind CSS를 사용하여 스타일링하고, React Hook Form과 Zod로 폼 검증을 하였습니다.
 
 ```bash

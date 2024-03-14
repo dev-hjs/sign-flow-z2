@@ -7,8 +7,8 @@ import { nanoid } from "nanoid";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 
-const clientKey = "test_ck_DpexMgkW36P6nxMd6KOErGbR5ozO";
-const customerKey = "YbX2HuSlsC9uVJW6NMRMj";
+const clientKey = process.env.NEXT_PUBLIC_CLIENT_KEY;
+const customerKey = process.env.NEXT_PUBLIC_CUSTOMER_KEY;
 
 export default function Checkout() {
   const paymentWidgetRef = useRef<PaymentWidgetInstance | null>(null);
@@ -18,6 +18,11 @@ export default function Checkout() {
   const [price, setPrice] = useState(50_000);
 
   useEffect(() => {
+    if (!clientKey || !customerKey) {
+      console.error("환경 변수가 정의되지 않음.");
+      return;
+    }
+
     (async () => {
       const paymentWidget = await loadPaymentWidget(clientKey, customerKey);
 
@@ -29,7 +34,7 @@ export default function Checkout() {
       paymentWidgetRef.current = paymentWidget;
       paymentMethodsWidgetRef.current = paymentMethodsWidget;
     })();
-  }, []);
+  }, [clientKey, customerKey, price]); // 의존성 배열에 clientKey와 customerKey를 추가
 
   useEffect(() => {
     const paymentMethodsWidget = paymentMethodsWidgetRef.current;
@@ -53,7 +58,7 @@ export default function Checkout() {
       <div className="items-top flex space-x-2 mb-4">
         <input
           type="checkbox"
-          onChange={(event) => {
+          onChange={(event: React.ChangeEvent<HTMLInputElement>) => {
             setPrice(event.target.checked ? price - 5_000 : price + 5_000);
           }}
           placeholder="0"
