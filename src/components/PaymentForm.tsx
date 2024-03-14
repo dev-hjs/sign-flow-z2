@@ -270,6 +270,25 @@ export default function PaymentForm() {
                 </Button>
               </div>
               <p className="mb-4">배송 메모</p>
+              <Select>
+                <SelectTrigger className="w-full bg-gray-100 border border-gray-300">
+                  <SelectValue
+                    placeholder="배송메모를 선택해주세요"
+                    className="pl-2"
+                  />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="light" className="hover:bg-gray-100">
+                    집 앞에 놓아주세요.
+                  </SelectItem>
+                  <SelectItem value="dark" className="hover:bg-gray-100">
+                    부재중시 연락바랍니다.
+                  </SelectItem>
+                  <SelectItem value="system" className="hover:bg-gray-100">
+                    무인 택배함에 놓아주세요.
+                  </SelectItem>
+                </SelectContent>
+              </Select>
               <hr className="my-4" />
               <p className="mb-4">쿠폰/포인트</p>
               <div className="flex w-full max-w-sm items-center space-x-2 mb-4">
