@@ -56,6 +56,7 @@ interface SelectFieldProps {
   placeholder?: string;
   label?: string;
   disabled?: boolean;
+  style?: React.CSSProperties;
 }
 
 // 쿠폰 선택 컴포넌트
@@ -274,8 +275,8 @@ export default function PaymentForm() {
               <div className="flex w-full max-w-sm items-center space-x-2 mb-4">
                 <Label
                   htmlFor="email"
-                  style={{ width: 100 }}
                   className="block text-sm font-medium text-gray-700"
+                  style={{ width: "100px" }}
                 >
                   쿠폰
                 </Label>
@@ -288,20 +289,20 @@ export default function PaymentForm() {
                     name: "selectedCoupon",
                   }}
                   placeholder="쿠폰을 선택해주세요."
+                  style={{ width: "300px" }}
                 />
-                <div className="flex w-full max-w-sm items-center space-x-2">
-                  <Button
-                    onClick={handleApplyCoupon}
-                    className="w-full bg-blue-500 text-white p-2 hover:bg-blue-600 transition-colors duration-200"
-                  >
-                    쿠폰 적용
-                  </Button>
-                </div>
+                <Button
+                  onClick={handleApplyCoupon}
+                  className="bg-blue-500 text-white p-2 hover:bg-blue-600 transition-colors duration-200"
+                  style={{ width: "140px" }} // 버튼 너비 조정
+                >
+                  쿠폰 적용
+                </Button>
               </div>
               <div className="flex w-full max-w-sm items-center space-x-2 mb-4">
                 <Label
                   htmlFor="points"
-                  style={{ width: 100 }}
+                  style={{ width: "100px" }}
                   className="block text-sm font-medium text-gray-700"
                 >
                   포인트
@@ -314,10 +315,12 @@ export default function PaymentForm() {
                     setPoints(Math.max(0, Number(e.target.value)))
                   }
                   placeholder="사용할 포인트"
+                  style={{ width: "390px" }}
                 />
                 <Button
                   onClick={handleApplyPoints}
                   disabled={points > totalPoints || points < 0}
+                  style={{ width: "85px" }}
                 >
                   포인트 적용
                 </Button>
