@@ -26,16 +26,147 @@ import {
 } from "@/components/ui/card";
 import {
   Select,
-  SelectContent,
   SelectItem,
   SelectTrigger,
+  SelectContent,
+  SelectLabel,
+  SelectGroup,
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import Image from "next/image";
 
+// SelectListItem 타입 정의
+interface SelectListItem {
+  id: string;
+  name: string;
+}
+
+// SelectFieldProps 타입 정의
+interface SelectFieldProps {
+  items: SelectListItem[];
+  field: {
+    onChange: (item: SelectListItem) => void;
+    onBlur: () => void;
+    value: SelectListItem | undefined;
+    name: string;
+  };
+  placeholder?: string;
+  label?: string;
+  disabled?: boolean;
+}
+
+// 쿠폰 선택 컴포넌트
+const SelectField: React.FC<SelectFieldProps> = ({
+  items,
+  field,
+  placeholder,
+  label,
+  disabled,
+}) => {
+  const handleFieldValue = (value: string) => {
+    const item = JSON.parse(value);
+    field.onChange(item);
+  };
+
+  return (
+    <Select onValueChange={handleFieldValue} disabled={disabled}>
+      <SelectTrigger className="bg-gray-100 border border-gray-300">
+        <SelectValue placeholder={placeholder} />
+      </SelectTrigger>
+      <SelectContent>
+        {label && <SelectLabel>{label}</SelectLabel>}
+        {items.map((item) => (
+          <SelectItem
+            key={item.id}
+            value={JSON.stringify(item)}
+            className="hover:bg-gray-100"
+          >
+            {item.name}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  );
+};
+
+// 결제 폼 컴포넌트
 export default function PaymentForm() {
+  const [points, setPoints] = useState(0); // 입력한 포인트
+  const [pointsUsed, setPointsUsed] = useState(0); // 사용할 포인트
+  const [selectedCoupon, setSelectedCoupon] = useState<
+    SelectListItem | undefined
+  >(undefined); // 선택된 쿠폰
+  const [finalPrice, setFinalPrice] = useState(18000); // 최종 결제금액
+  const [discount, setDiscount] = useState(0); // 할인액
+  const [totalPoints, setTotalPoints] = useState(2300); // 총 보유 포인트
+
+  // 쿠폰 목록
+  const couponItems: SelectListItem[] = [
+    { id: "5000", name: "5천원 할인쿠폰" },
+    { id: "30percent", name: "30% 할인쿠폰" },
+  ];
+
+  // 포인트 입력 변경
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const newValue = Number(e.target.value);
+    setPoints(isNaN(newValue) ? 0 : newValue); // 음수 방지 및 숫자 검증
+  };
+
+  useEffect(() => {
+    console.log(`선택된 쿠폰: ${selectedCoupon}`);
+    console.log(`discount: ${discount}`);
+    console.log(`finalPrice: ${finalPrice}`);
+    console.log(`pointsUsed: ${pointsUsed}`);
+  }, [selectedCoupon, discount, finalPrice, pointsUsed]);
+
+  // 쿠폰 적용
+  const handleApplyCoupon = () => {
+    let discountAmount = 0;
+    const basePrice = 18000;
+
+    if (selectedCoupon) {
+      // 선택된 쿠폰에 따라 할인액 계산
+      console.log(`선택된 쿠폰: ${selectedCoupon.id}`);
+      if (selectedCoupon.id === "5000") {
+        discountAmount = 5000;
+      } else if (selectedCoupon.id === "30percent") {
+        discountAmount = basePrice * 0.3;
+      } else {
+        console.error(`쿠폰n: ${selectedCoupon}`);
+      }
+
+      setDiscount(discountAmount);
+    }
+  };
+
+  // 포인트 적용
+  const handleApplyPoints = () => {
+    const pointsToUse = Math.max(0, Number(points));
+    if (pointsToUse > totalPoints) {
+      alert("Cannot use more points than available.");
+      return;
+    }
+
+    setPointsUsed(pointsToUse);
+  };
+
+  // 쿠폰 변경
+  const handleCouponChange = (item: SelectListItem) => {
+    setSelectedCoupon(item);
+  };
+
+  // 쿠폰 할인, 포인트 사용 후 최종 결제금액
+  useEffect(() => {
+    const basePrice = 18000;
+    let priceAfterDiscount = basePrice - discount - pointsUsed;
+    let finalPriceAfterPoints = Math.max(0, priceAfterDiscount);
+    if (finalPriceAfterPoints < 0) finalPriceAfterPoints = 0; // 최종 금액 음수 방지
+
+    setFinalPrice(finalPriceAfterPoints);
+  }, [discount, pointsUsed]);
+
   return (
     <div className="flex justify-center items-center bg-gray-50 min-h-screen">
       <div className="block w-full max-w-4xl mx-auto bg-white shadow-lg rounded-lg overflow-hidden">
@@ -126,25 +257,7 @@ export default function PaymentForm() {
                 </Button>
               </div>
               <p className="mb-4">배송 메모</p>
-              <Select>
-                <SelectTrigger className="w-full bg-gray-100 border border-gray-300">
-                  <SelectValue
-                    placeholder="배송메모를 선택해주세요"
-                    className="pl-2"
-                  />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="light" className="hover:bg-gray-100">
-                    집 앞에 놓아주세요.
-                  </SelectItem>
-                  <SelectItem value="dark" className="hover:bg-gray-100">
-                    부재중시 연락바랍니다.
-                  </SelectItem>
-                  <SelectItem value="system" className="hover:bg-gray-100">
-                    무인 택배함에 놓아주세요.
-                  </SelectItem>
-                </SelectContent>
-              </Select>
+
               <hr className="my-4" />
               <p className="mb-4">쿠폰/포인트</p>
               <div className="flex w-full max-w-sm items-center space-x-2 mb-4">
@@ -156,28 +269,22 @@ export default function PaymentForm() {
                   쿠폰
                 </Label>
 
-                <Select>
-                  <SelectTrigger
-                    className="bg-gray-100 border border-gray-300"
-                    style={{ width: 900 }}
-                  >
-                    <SelectValue
-                      placeholder="쿠폰을 선택해주세요"
-                      className="pl-2"
-                    />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="5000" className="hover:bg-gray-100">
-                      5천원 할인쿠폰
-                    </SelectItem>
-                    <SelectItem value="30percent" className="hover:bg-gray-100">
-                      30% 할인쿠폰
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
+                <SelectField
+                  items={couponItems}
+                  field={{
+                    onChange: handleCouponChange,
+                    onBlur: () => {},
+                    value: selectedCoupon,
+                    name: "selectedCoupon",
+                  }}
+                  placeholder="쿠폰을 선택해주세요."
+                />
 
                 <div className="flex w-full max-w-sm items-center space-x-2">
-                  <Button className="w-full bg-blue-500 text-white p-2 hover:bg-blue-600 transition-colors duration-200">
+                  <Button
+                    onClick={handleApplyCoupon}
+                    className="w-full bg-blue-500 text-white p-2 hover:bg-blue-600 transition-colors duration-200"
+                  >
                     쿠폰 적용
                   </Button>
                 </div>
@@ -194,21 +301,22 @@ export default function PaymentForm() {
                 <Input
                   id="points"
                   type="number"
-                  value=""
-                  placeholder=""
-                  className="border p-2 w-full"
+                  value={points.toString()}
+                  onChange={(e) =>
+                    setPoints(Math.max(0, Number(e.target.value)))
+                  }
+                  placeholder="사용할 포인트"
                 />
                 <Button
-                  type="submit"
-                  style={{ width: 150 }}
-                  className="bg-blue-500 text-white p-2 hover:bg-blue-600 transition-colors duration-200"
+                  onClick={handleApplyPoints}
+                  disabled={points > totalPoints || points < 0}
                 >
-                  포인트 사용
+                  포인트 적용
                 </Button>
               </div>
               <div className="flex justify-between">
                 <span>보유 포인트</span>
-                <span>점</span>
+                <span>2,300점</span>
               </div>
             </CardContent>
             {/* 우측 영역 */}
@@ -218,19 +326,19 @@ export default function PaymentForm() {
               </CardTitle>
               <div className="flex justify-between px-4 py-2">
                 <span>총 상품 가격</span>
-                <span>원</span>
+                <span>18,000원</span>
               </div>
               <div className="flex justify-between px-4 py-2">
                 <span>쿠폰 할인</span>
-                <span>원</span>
+                <span>{discount.toLocaleString()}원</span>
               </div>
               <div className="flex justify-between px-4 py-2">
                 <span>포인트 할인</span>
-                <span>원</span>
+                <span>{pointsUsed.toLocaleString()}원</span>
               </div>
               <div className="flex justify-between px-4 py-2 font-bold">
                 <span>최종 결제금액</span>
-                <span>원</span>
+                <span>{finalPrice.toLocaleString()}원</span>
               </div>
               <hr className="my-4" />
               <CardTitle className="text-lg font-semibold mb-4">
