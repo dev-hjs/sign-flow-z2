@@ -5,8 +5,8 @@ Tailwind CSS를 사용하여 스타일링하고, React Hook Form과 Zod로 폼 �
 
 ```bash
 // Next.js 프로젝트 생성 후 폴더 내로 이동
-yarn create sign-flow-z2
-cd sign-flow-z2
+yarn create sign-flow-z
+cd sign-flow-z
 ```
 
 ## 프로젝트 환경
