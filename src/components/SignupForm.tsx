@@ -129,12 +129,20 @@ export default function SignupForm() {
         </label>
 
         {/* Submit button */}
-        <button
-          type="submit"
-          className="py-3 px-4 w-full border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-        >
-          회원가입
-        </button>
+        <div className="flex">
+          <button
+            type="submit"
+            className="py-3 px-4 w-full border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+            회원가입
+          </button>
+          <button
+            type="submit"
+            className="ml-3 py-3 px-4 w-full border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+          >
+            로그인
+          </button>
+        </div>
       </form>
 
       {/* Modal for displaying form data upon submission */}
