@@ -3,6 +3,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { signupSchema, SignUpFormData } from "@/validators/auth";
 import Modal from "./Modal";
+import { useRouter } from "next/router";
 
 export default function SignupForm() {
   const {
@@ -15,10 +16,15 @@ export default function SignupForm() {
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState<SignUpFormData | null>(null);
+  const router = useRouter();
 
   const onSubmit: SubmitHandler<SignUpFormData> = (data) => {
     setFormData(data);
     setIsModalOpen(true);
+  };
+
+  const handleLoginRedirect = () => {
+    router.push("/login");
   };
 
   return (
@@ -137,8 +143,9 @@ export default function SignupForm() {
             회원가입
           </button>
           <button
-            type="submit"
-            className="ml-3 py-3 px-4 w-full border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            type="button"
+            className="ml-3 py-3 px-4 w-full border border-transparent shadow-sm text-base font-medium rounded-md text-white bg-blue-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            onClick={handleLoginRedirect}
           >
             로그인
           </button>
