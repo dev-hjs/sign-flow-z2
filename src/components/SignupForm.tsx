@@ -18,9 +18,15 @@ export default function SignupForm() {
   const [formData, setFormData] = useState<SignUpFormData | null>(null);
   const router = useRouter();
 
+  // const onSubmit: SubmitHandler<SignUpFormData> = (data) => {
+  //   setFormData(data);
+  //   setIsModalOpen(true);
+  // };
+
   const onSubmit: SubmitHandler<SignUpFormData> = (data) => {
-    setFormData(data);
-    setIsModalOpen(true);
+    // 사용자 정보를 로컬 스토리지에 저장
+    localStorage.setItem("user", JSON.stringify(data));
+    router.push("/login"); // 로그인 페이지로 리디렉션
   };
 
   const handleLoginRedirect = () => {
@@ -33,7 +39,6 @@ export default function SignupForm() {
         onSubmit={handleSubmit(onSubmit)}
         className="rounded-lg border bg-gray-100 space-y-4 w-full max-w-md p-6"
       >
-        {/* Input fields for the form */}
         <div className="flex flex-col space-y-1.5">
           <h3 className="text-2xl font-semibold leading-none tracking-tight">
             계정을 생성합니다
@@ -43,7 +48,6 @@ export default function SignupForm() {
           </p>
         </div>
 
-        {/* Name field */}
         <label className="block">
           <span className="text-gray-700">이름</span>
           <input
@@ -56,7 +60,6 @@ export default function SignupForm() {
           )}
         </label>
 
-        {/* Email field */}
         <label className="block">
           <span className="text-gray-700">이메일</span>
           <input
@@ -69,7 +72,6 @@ export default function SignupForm() {
           )}
         </label>
 
-        {/* Contact field */}
         <label className="block">
           <span className="text-gray-700">연락처</span>
           <input
@@ -84,7 +86,6 @@ export default function SignupForm() {
           )}
         </label>
 
-        {/* Role selection */}
         <label className="block">
           <span className="text-gray-700">역할</span>
           <select
@@ -103,7 +104,6 @@ export default function SignupForm() {
           )}
         </label>
 
-        {/* Password field */}
         <label className="block">
           <span className="text-gray-700">비밀번호</span>
           <input
@@ -119,7 +119,6 @@ export default function SignupForm() {
           )}
         </label>
 
-        {/* Password confirmation field */}
         <label className="block">
           <span className="text-gray-700">비밀번호 확인</span>
           <input
@@ -152,7 +151,6 @@ export default function SignupForm() {
         </div>
       </form>
 
-      {/* Modal for displaying form data upon submission */}
       <Modal
         isOpen={isModalOpen}
         data={formData}
